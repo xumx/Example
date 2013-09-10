@@ -1,0 +1,53 @@
+{
+	"id": "________",
+	"field_type": "____",
+	"class": "radio inline",
+	"choices": [
+		"Mr",
+		"Ms",
+		"Dr",
+		"Other"
+	]
+}
+
+DISPLAY_NAME
+IDENTITY_DOCUMENT_TYPE
+GENDER
+MARITAL_STATUS
+EDUCATION_STATUS
+NRIC
+PASSPORT
+NATIONALITY
+COUNTRY
+EMAIL
+DATE_OF_BIRTH
+PHONE
+SINGAPORE_POSTAL
+OVERSEAS_ADDRESS
+STREET
+BLOCK
+UNIT
+BUILDING
+COMPANY
+ANNUAL_INCOME
+YES_NO
+
+{
+	"type": "label-header",
+	"text": "Permanent Address in Singapore"
+}
+
+{
+	"id": "________",
+	"type": "checkbox",
+	"text": "Same as Residential"
+}
+
+[{
+	"type": "label",
+	"text": "Document Number "
+}, {
+	"id": "e237fe4c",
+	"type": "text",
+	"spellcheck": "false"
+}],

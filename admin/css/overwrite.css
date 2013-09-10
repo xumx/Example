@@ -1,0 +1,24 @@
+.login-box input[type="text"], .login-box input[type="password"] {
+	/*background-image: url(../img/dark_exa.png);*/
+	background-color: #118cd1;
+}
+
+body {
+	background-image: url(../img/pw_maze_white.png);
+}
+
+.smallstat .title {
+	color: #444;
+}
+
+.chat .conversation ul li {
+	padding-left: 0;
+}
+
+.dataTables_filter {
+	float: right;
+}
+
+select[size] {
+	height: 30px;
+}

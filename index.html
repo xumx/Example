@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en" ng-app>
+<!--<![endif]-->
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title></title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width">
+
+	<!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+	<!-- <link rel="stylesheet" href="css/normalize.css"> -->
+
+	<link href="css/bootstrap.css" rel="stylesheet">
+	<link href="css/bootstrap-responsive.css" rel="stylesheet">
+	<link rel="stylesheet" href="css/main.css">
+	<link rel="stylesheet" href="css/good.css">
+	<!-- <link rel="stylesheet" href="plugins/dropzone/dropzone.css"> -->
+	<script src="js/vendor/modernizr-2.6.2.min.js"></script>
+</head>
+
+<body ng-controller="controller" ng-cloak>
+	<noscript>
+		<div class="no-js-message">We noticed you have Javascript disabled. Some features may not work correctly. For the full site experience, please
+			<strong>enable Javascript</strong>on your web browser.</div>
+		</noscript>
+    <!--
+	[if lt IE 7]>
+	<p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+	<![endif]-->
+
+	<!-- Add your site or application content here -->
+	<div class="container-fluid" style="min-height:100%">
+
+		<div id="alert-autofill" class="alert alert-block alert-info blue fade in" style="display: none;">
+			<button type="button" class="close" data-dismiss="alert">×</button>
+			We have populated the highlighted fields for your convenience. Kindly verify.
+		</div>
+
+		<div class="alert alert-block alert-error fade in" style="display: none;">
+			<button type="button" class="close" data-dismiss="alert">×</button>
+			<strong>Submit Error!</strong>
+			<span class="message"></span>
+		</div>
+
+		<div id="components" ng-show="dev">
+			<legend class="text-center">
+				Basic Components
+			</legend>
+			<div class="componentList">
+				<div class="row-fluid" ng-repeat="component in componentList" type="{{component.type}}">
+					<div class="handle span4">{{component.handle}}</div>
+					<div class="component" ng-bind-html-unsafe="component.element"></div>
+				</div>
+			</div>
+
+			<legend class="text-center">
+				Pre-built Templates
+			<legend>
+			<div class="componentList">
+				
+			</div>
+		</div>
+
+		<form class="main">
+			<img src="img/logo.png" alt="Standard Chartered Bank" class="brand">
+
+			<div class="sections-container"></div>
+
+			<noscript>
+				<div class="row-fluid" style="margin:50px auto;">
+					<div class="lead text-center">
+						<a href="http://standardchartered.com.sg">Go back to Standard Chartered main website</a>
+					</div>
+				</div>
+			</noscript>
+
+			<div class="row-fluid text-center" style="margin:15px 0;">
+				<button class="btn btn-large span3 btn-success pull-right" ng-click="next()" ng-show="hasNext()">Next Section</button>
+				<button class="btn noMarginLeft btn-large span3 pull-left" ng-click="back()" ng-show="hasPrev()">Previous Section</button>
+				<button class="btn btn-large offset3 span6 btn-primary pull-right" ng-click="preview()" ng-hide="hasNext()">Preview Form</button>
+				<button class="btn btn-large offset3 span6 btn-primary pull-right" ng-click="submit()" ng-show="isComplete">Submit Form</button>
+			</div>
+
+			<div class="vib">
+				<div class="vib-1" ng-click="loadDefault()"></div>
+				<div class="vib-2" ng-click="resume()"></div>
+				<div class="vib-3" ng-click="adminResume()"></div>
+				<div class="vib-4"></div>
+				<div class="vib-5"></div>
+			</div>
+			<div class="text-center muted">
+				© Standard Chartered 2013
+			</div>
+		</form>
+	</div>
+
+	<div id="hidden" class="hide">Google Maps Plugin</div>
+
+	<script src="js/vendor/jquery-1.10.2.js"></script>
+	<script src="js/vendor/angular.js"></script>
+	<script src="js/vendor/bootstrap.js"></script>
+	<script src="js/vendor/underscore.js"></script>
+	<!-- // <script src="js/vendor/linked.js"></script> -->
+
+	<!-- plugins -->
+	<!-- // <script src="plugins/garlic.js"></script> -->
+	<!-- // <script src="plugins/parsley.js"></script> -->
+	<!-- // <script src="plugins/dropzone/dropzone.js"></script> -->
+	<script src="plugins/underscore.string.js"></script>
+
+	<script src="plugins/jquery-ui-1.10.3.custom.js"></script>
+	<!-- // <script src="plugins/jquery.sortable.js"></script> -->
+	<script src="plugins/mailcheck.js"></script>
+
+	<script src="js/helpers.js"></script>
+	<script src="js/fixtures.js"></script>
+	<script src="js/main.js"></script>
+	<script src="https://maps.googleapis.com/maps/api/js?libraries=places&sensor=false"></script>
+
+	<script type="text/javascript" src="https://platform.linkedin.com/in.js">
+		api_key: vcr4vng3gktf
+		onLoad: onLinkedInLoad
+		authorize: true
+	</script>
+</body>
+
+</html>

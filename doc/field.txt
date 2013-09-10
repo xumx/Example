@@ -1,0 +1,79 @@
+
+Field in Intro Slides
+
+{
+	title : "Are you a Singapore citizen/PR?",
+	field_id : "coPtD1k7AYVbaGExdMKjQO"
+}
+
+{
+	title : "Please upload the front of your Singapore NRIC",
+	
+	document : {
+		type : "NRIC_FRONT",
+		owner : "MAIN_APPLICANT"
+	},
+
+	dependency: [{
+		if: "coPtD1k7AYVbaGExdMKjQO",
+		is: true
+	}]
+}
+
+
+	{
+		field_id : "fYJQTad5A11bjjE6bQ8zf0",
+		field_type : "COUNTRY"
+	}
+
+
+	{
+		field_id : "7BwzbXTR4rabgJ3nGLMTcR",
+		field_type : "SINGAPORE_POSTAL"
+	}
+
+Field Types
+
+List of Defined Field Types
+
+	- Full Name						- Overseas Address
+	- Display Name					- Street
+	- Identity Document Type		- Block
+	- Gender						- Unit
+	- Marital Status				- Building
+	- Education Status				- Company
+	- NRIC							- Occupation
+	- Passport						- Annual Income
+	- Nationality					- Relationship
+	- Country						- Credit Card Choice
+	- Email							- Ownership Type
+	- Date Of Birth					- Account Number
+	- Phone							
+	- Singapore Postal				... more on project wiki
+
+
+		NRIC: {
+			type: 'text',
+			spellcheck: 'false',
+			validate: {
+				pattern: '^[SFTG]\\d{7}[A-Z]$',
+				message: 'The NRIC you have entered is invalid'
+			}
+		}
+
+
+SINGAPORE_POSTAL: {
+		type: 'text',
+		required: true,
+		spellcheck: 'false',
+		smartfill: 'postalcode',
+		validate: {
+			pattern: '\\d{6}',
+			message: 'Postal code should be a 6 digit number'
+		},
+		tooltip: {
+			title: '6 digit postal code'
+		}
+	}
+
+

@@ -1,0 +1,19 @@
+
+{
+	form_id: "SAVINGS",
+
+	intro: [
+		{ slide 1 },
+		{ slide 2 },
+		{ slide 3 },
+		...
+	],
+
+	sections: [
+		{ section 1 },
+		{ section 2 },
+		{ section 3 },
+		...
+	]
+}
+

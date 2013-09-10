@@ -1,0 +1,18 @@
+List of Defined Field Types
+
+	- Full Name							- Overseas Address
+	- Display Name						- Street
+	- Identity Document Type			- Block
+	- Gender							- Unit
+	- Marital Status					- Building
+	- Education Status					- Company
+	- NRIC								- Occupation
+	- Passport							- Annual Income
+	- Nationality						- Yes No
+	- Country							- Credit Card Choice
+	- Email								- Ownership Type
+	- Date Of Birth						- Account Number
+	- Phone								- Relationship
+	- Singapore Postal					- Text
+	- Textarea
+

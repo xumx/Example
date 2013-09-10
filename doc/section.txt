@@ -1,0 +1,14 @@
+
+{
+	section_id : "MAIN_APPLICANT",
+
+	title : "Main Applicant Details",
+
+	fields : [
+		{ field 1 }
+		{ field 2 }
+		{ field 3 }
+		...
+	]
+}
+
