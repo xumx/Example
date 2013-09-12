@@ -188,8 +188,39 @@ var helpers = {
 					.append($('<label class="checkbox-label">' + data.text + '</label>'));
 
 			case 'file':
-				//TODO
-				// return $('<div>', _.pick(data, 'field_id')).addClass("dropzone");
+				element = $('<div class="btn btn-success span4 fileinput-button" style="margin:5px;"><i class="glyphicon glyphicon-plus"></i><span>Select files...</span><input type="file" name="file"></div>');
+
+				element.find('input').fileupload({
+					url: FILE_UPLOAD_PATH,
+					dataType: 'json',
+					done: function(e, response) {
+
+						_.each(response.result.results, function(value, key) {
+							var element = $('#' + key)
+							console.log(key);
+							if (scope.form[key] === undefined) {
+								scope.form[key] = value;
+								element.addClass('green');
+							}
+						});
+
+						scope.$apply();
+					},
+					formData: [{
+						name: 'form_id',
+						value: scope.form_id
+					}, {
+						name: 'section_id',
+						value: data.upload.section_id
+					}, {
+						name: 'document_id',
+						value: data.upload.document_id
+					}]
+				}).prop('disabled', !$.support.fileInput)
+					.parent().addClass($.support.fileInput ? undefined : 'disabled');
+
+				window.develement = element;
+				return element;
 
 			case 'text':
 				return $('<input>', data).addClass("span7 input-underline");
@@ -316,37 +347,21 @@ function smartPostal(id, element) {
 		if (newValue === undefined) {
 			return;
 		} else if (newValue.length === 6) {
-			lookup(newValue, function(response) {
-				if (response.error) {
+			$.get(GET_POSTAL_PATH + newValue, function(address) {
+				if (address.error) {
+
 
 				} else {
 					var nearestSmartBlock = $(element).parent().closestNext(":has(input[smartfill=block])").find("input[smartfill=block]");
 					var nearestSmartstreet = $(element).parent().closestNext(":has(input[smartfill=street])").find("input[smartfill=street]");
 
+					//TODO
 					nearestSmartBlock.val(address.streetnumber).addClass('green');
 					nearestSmartstreet.val(address.streetname).addClass('green');
 				}
 			});
 		}
 	});
-
-	function lookup(postalcode, callback) {
-		// var code = _.find(POSTALCODE, function(row) {
-		// 	return (row[0] == parseInt(postalcode));
-		// });
-
-		$.get(GET_POSTAL_PATH + postalcode, function(response) {
-			if (response) {
-				callback(response);
-			}
-		});
-
-		// if (found) {
-		// 	callback(found[1]);
-		// } else {
-		// 	callback(undefined);
-		// }
-	}
 }
 
 function smartStreet(query, callback) {
@@ -493,11 +508,19 @@ function controller($scope, $compile) {
 			// has next step
 			current.toggleClass('hide');
 			next.toggleClass('hide');
-			console.log(next);
+
+			//If this is second last page
+			if (current.is('section') && next.next().length == 0) {
+				scope.isGoingPreview = true;
+			}
+
 		} else {
 			// reached the end
 			$('.modal').modal('hide');
-			$('section').first().removeClass("hide");
+
+			if (current.is('.step')) {
+				$('section').first().removeClass("hide");
+			}
 		}
 	}
 
@@ -519,13 +542,20 @@ function controller($scope, $compile) {
 				prev.toggleClass('hide');
 				console.log(prev);
 			}
+
+			if (current.is('section') && next.next().length == 0) {
+				scope.isGoingPreview = true;
+			}
 		}
 
 		$scope.$apply();
 	}
 
 	scope.preview = function() {
+
+		scope.isGoingPreview = false;
 		scope.isPreview = true;
+
 		$('section:not(.skip)').removeClass("hide");
 
 		// $('section:not(.skip)').slideToggle(500);
@@ -549,12 +579,15 @@ function controller($scope, $compile) {
 			.css('color', 'black')
 			.css('font-size', '1.3em');
 
+
 		// $('.multi-column')
 		// 	.removeClass('multi-column')
 		// 	.addClass('single-column');
 	}
 
 	scope.submit = function() {
+		scope.isPreview = false;
+
 		$('section:not(.skip)').slideToggle(500);
 
 		var isValid = _.every($('input:visible'), function(e) {
@@ -576,7 +609,7 @@ function controller($scope, $compile) {
 				if (response.success) {
 
 				} else {
-					console.console.log(response);
+					console.log(response);
 					$('.alert .message').text(response.error);
 					$('.alert').show().alert();
 				}
@@ -587,7 +620,6 @@ function controller($scope, $compile) {
 			$('.sections-container').empty();
 			$('.sections-container').append('<div class="row-fluid" style="margin:50px auto;"><div class="text-center"><div class="lead"><span>Thank you for signing up with Standard Chartered Bank</span><div>Your application is currently under review</div><br><br><p>Reference Number #' + scope.referenceNumber + '</p></div><p>Should you require further assistance, you may contact us at our 24-hour Phone Banking Team<br>on 1800 747 7000 or +65 6747 7000 if you are calling us from overseas.</p></div></div>');
 
-			scope.isComplete = true;
 			$scope.$apply();
 
 		} else {
@@ -647,9 +679,72 @@ function controller($scope, $compile) {
 	}
 
 	scope.loadDefault = function() {
-		_.defaults(scope.form, {"8Ig3JPi2ANU99BD7O1fe6M":true,"49CaSPzsAth99GhMASCvxb":true,"d25YZHBN4R8aSjQ675MB4r":"Father","73ffYh6C42k97HKHPoPN20":"Huang Shen Zhi","7w4nbdaaQdO8SYLPebIpkW":"Richard Huang","dNIheqz5kQhbboZTFMvqgU":"G3456778T","2qa9q6uqAWC8y9bn6B4urS":"Malaysian","eJ6hDUzzABDbkpLtzUpQkW":"Singapore","dmmycr4T4ETaDEDWcyuGHj":"Malaysia","bMaix4La4DQ8faWaF8Swf3":"+65 6400 4537","5u2qhwRAQwe8ds9FwwXIyO":"+65 6462 4537","bkp1rkOlAabagaP9OxEZI4":"+65 8756 4537","1NvuuCGAQ3i8IpZB7rdiqH":"exploresea@gmail.com","9sHq3ujNAy88fTCwbha5lk":"NTU","b3L8s3W4kn48W8iMV2hmFm":"Software Engineer","blSIO9RNQo19tSHOwJHtj3":"20000","d4I6FsZmA6Bbp1XnB2zBdf":"639798","8jSqlqZNAngbulddnJdvr1":"86","6BD4Wbulk1ibAGXDPixydU":"08-09","fmolKtKgkZn8DXvu9JyNCr":"Ang Mo Kio Ave","cz3JQZvN4NfbV9CQLFHQkU":"Sunshine Building","coPtD1k7AYVbaGExdMKjQO":true,"brbK4AJqkSb9bIrTUmdjp9":true,"7PbUh9izQ1G8XNbX0fNwjs":true,"bVzhWsY6Qgi8afMwYbmKOG":true,"ewNQ13rGAcXbYpif3HhGDH":"Shen Zhi Huang","6CKh3bRvkTSbiRrAasuGx4":"G3890267X","fzJOQiRLAzQbrjwqvUaOd4":"Singaporean","1xLu7gSRkWp8ccqvftD5gf":"Singapore","fYJQTad5A11bjjE6bQ8zf0":"Singapore","7BwzbXTR4rabgJ3nGLMTcR":"567000","pHA2KVQAzw8EJZ9OPJevU":"20","2GR53EvaAzFbVziMmVmYmK":"03-03","e3wEtnIA4nj9iiNtVkva2i":"Ang Mo Kio Ave 1","5AOzTM0HkVQ8Insa8tURVh":"Palm Lodge","bHZyJytz4Z18lkH8NPzgOp":"+65 9012 3845","qd6TE8yQELar6gAOAcxVZ":"+65 7810 3245","c4sZgluj4fMbOPqISvLr6Q":"+65 6420 1800","19b5WvJkAs6bzbWwPrQrCr":"exploredakota@gmail.com","2H96dn9DQmnbeo2xOh32M9":"Creative Technology Ltd Singapore","ehSS2Hgd4zLb9ya1kWNx5g":"178901","3trNc1d4Qlz8xG0TUJTaNC":"Assistant Business Analyst","3AJaFyxsQra8RdmyslJqTw":"30000","4DtWtmAbkCHa4JRyHlC94m":"80","1H7IIi6A4cfbE9tSBnrIHs":"#03-02","2vxtEhDIko08dcp90YtJZV":"Stamford Road","5C8APAqB469bvm93yvIBG0":"School of Information Systems","3vabAHeak2m8CfO4LIaNbG":"Richard Huang","1t41j5ly4a5bhfIACG363I":"Wong Jia Chen","4kGrTqq6kFV8IgpPmLnzjy":"5","3SWNUVb4kBG8lJQgZqCAeJ":"10","eJqjiZkNkxIaZ1PEHwb0xF":"189-2-3048","8Ijrtv2Uk599U4H9PcqHBF":"198-9-2013","6SwsRG0lAOAbDpfcrNzdy0":"Tan Zhi Ying","bosQuuTzArn8h98sjXeTIK":"Sister","4VzdbsVt457abxYiqclaQz":"193802","3kkAJQ9ZQ6b8zZRkLZsDdE":"8","bQ8oYGgiA0DaVCDtlRU963":"1304","9OEswbNdQdT9gO0cNToSUc":"Yio Chu Kang Road","3NrCAHAkQ6ebmdLnF783CL":"Hillside Building","fWKARU6IkIYbTfNW6uJF0v":"+65 8908 1756","bdvi6eNV4bi8mvpcUM5IIc":"Kathay Chen"});
+		_.defaults(scope.form, {
+			"8Ig3JPi2ANU99BD7O1fe6M": true,
+			"49CaSPzsAth99GhMASCvxb": true,
+			"d25YZHBN4R8aSjQ675MB4r": "Father",
+			"73ffYh6C42k97HKHPoPN20": "Huang Shen Zhi",
+			"7w4nbdaaQdO8SYLPebIpkW": "Richard Huang",
+			"dNIheqz5kQhbboZTFMvqgU": "G3456778T",
+			"2qa9q6uqAWC8y9bn6B4urS": "Malaysian",
+			"eJ6hDUzzABDbkpLtzUpQkW": "Singapore",
+			"dmmycr4T4ETaDEDWcyuGHj": "Malaysia",
+			"bMaix4La4DQ8faWaF8Swf3": "64004537",
+			"5u2qhwRAQwe8ds9FwwXIyO": "64624537",
+			"bkp1rkOlAabagaP9OxEZI4": "87564537",
+			"1NvuuCGAQ3i8IpZB7rdiqH": "is480rockets@gmail.com",
+			"9sHq3ujNAy88fTCwbha5lk": "NTU",
+			"b3L8s3W4kn48W8iMV2hmFm": "Software Engineer",
+			"blSIO9RNQo19tSHOwJHtj3": "20000",
+			"d4I6FsZmA6Bbp1XnB2zBdf": "639798",
+			"8jSqlqZNAngbulddnJdvr1": "86",
+			"6BD4Wbulk1ibAGXDPixydU": "08-09",
+			"fmolKtKgkZn8DXvu9JyNCr": "Ang Mo Kio Ave",
+			"cz3JQZvN4NfbV9CQLFHQkU": "Sunshine Building",
+			"coPtD1k7AYVbaGExdMKjQO": true,
+			"brbK4AJqkSb9bIrTUmdjp9": true,
+			"7PbUh9izQ1G8XNbX0fNwjs": true,
+			"bVzhWsY6Qgi8afMwYbmKOG": true,
+			"ewNQ13rGAcXbYpif3HhGDH": "Shen Zhi Huang",
+			"6CKh3bRvkTSbiRrAasuGx4": "G3890267X",
+			"fzJOQiRLAzQbrjwqvUaOd4": "Singaporean",
+			"1xLu7gSRkWp8ccqvftD5gf": "Singapore",
+			"fYJQTad5A11bjjE6bQ8zf0": "Singapore",
+			"7BwzbXTR4rabgJ3nGLMTcR": "567000",
+			"pHA2KVQAzw8EJZ9OPJevU": "20",
+			"2GR53EvaAzFbVziMmVmYmK": "03-03",
+			"e3wEtnIA4nj9iiNtVkva2i": "Ang Mo Kio Ave 1",
+			"5AOzTM0HkVQ8Insa8tURVh": "Palm Lodge",
+			"bHZyJytz4Z18lkH8NPzgOp": "90123845",
+			"qd6TE8yQELar6gAOAcxVZ": "78103245",
+			"c4sZgluj4fMbOPqISvLr6Q": "+65 6420 1800",
+			"19b5WvJkAs6bzbWwPrQrCr": "exploredakota@gmail.com",
+			"2H96dn9DQmnbeo2xOh32M9": "Creative Technology Ltd Singapore",
+			"ehSS2Hgd4zLb9ya1kWNx5g": "178901",
+			"3trNc1d4Qlz8xG0TUJTaNC": "Assistant Business Analyst",
+			"3AJaFyxsQra8RdmyslJqTw": "30000",
+			"4DtWtmAbkCHa4JRyHlC94m": "80",
+			"1H7IIi6A4cfbE9tSBnrIHs": "#03-02",
+			"2vxtEhDIko08dcp90YtJZV": "Stamford Road",
+			"5C8APAqB469bvm93yvIBG0": "School of Information Systems",
+			"3vabAHeak2m8CfO4LIaNbG": "Richard Huang",
+			"1t41j5ly4a5bhfIACG363I": "Wong Jia Chen",
+			"4kGrTqq6kFV8IgpPmLnzjy": "5",
+			"3SWNUVb4kBG8lJQgZqCAeJ": "10",
+			"eJqjiZkNkxIaZ1PEHwb0xF": "189-2-3048",
+			"8Ijrtv2Uk599U4H9PcqHBF": "198-9-2013",
+			"6SwsRG0lAOAbDpfcrNzdy0": "Tan Zhi Ying",
+			"bosQuuTzArn8h98sjXeTIK": "Sister",
+			"4VzdbsVt457abxYiqclaQz": "193802",
+			"3kkAJQ9ZQ6b8zZRkLZsDdE": "8",
+			"bQ8oYGgiA0DaVCDtlRU963": "1304",
+			"9OEswbNdQdT9gO0cNToSUc": "Yio Chu Kang Road",
+			"3NrCAHAkQ6ebmdLnF783CL": "Hillside Building",
+			"fWKARU6IkIYbTfNW6uJF0v": "+65 8908 1756",
+			"bdvi6eNV4bi8mvpcUM5IIc": "Kathay Chen"
+		});
 	}
-	
+
 	//Load as a whole form
 	loadForm('template/form.json');
 
@@ -901,6 +996,7 @@ function controller($scope, $compile) {
 			if (e.which === 8 && !$(e.target).is("input, textarea")) {
 				e.preventDefault();
 				scope.back();
+				scope.$apply();
 			}
 		});
 
@@ -962,7 +1058,7 @@ function onLinkedInAuth() {
 					year: 0
 				})
 
-				console.console.log('date of birth from linkedin ', me.dateOfBirth);
+				console.log('date of birth from linkedin ', me.dateOfBirth);
 				result.dateOfBirth = _.template("{{year}}-{{month}}-{{day}}")(me.dateOfBirth);
 			}
 
@@ -972,15 +1068,15 @@ function onLinkedInAuth() {
 
 			//retrieve phoneNumber value from result returned by linkedin 
 			if (me.phoneNumbers._total) {
-				_.each(me.phoneNumbers.values, function() {
-					if (phoneType == "mobile") {
-						result.mobile = hasMobile.phoneNumber;
+				_.each(me.phoneNumbers.values, function(phone) {
+					if (phone.phoneType == "mobile") {
+						result.mobile = phone.phoneNumber;
 					}
-					if (phoneType == "work") {
-						result.work = hasMobile.phoneNumber;
+					if (phone.phoneType == "work") {
+						result.work = phone.phoneNumber;
 					}
-					if (phoneType == "home") {
-						result.home = hasMobile.phoneNumber;
+					if (phone.phoneType == "home") {
+						result.home = phone.phoneNumber;
 					}
 				});
 			}
@@ -1001,7 +1097,7 @@ function onLinkedInAuth() {
 						companyName = tempObj.company.name;
 						recentPosition = tempObj.title;
 						hasRecent = true;
-					} else if ((tempObj.endDate.year > mostRecentYr && hasRecent == false) || (tempObj.endDate.year = mostRecentYr && tempObj.endDate.month > mostRecentMon && hasRecent == false)) {
+					} else if ((tempObj.endDate.year > mostRecentYr && hasRecent == false) || (tempObj.endDate.year == mostRecentYr && tempObj.endDate.month > mostRecentMon && hasRecent == false)) {
 						mostRecentYr = tempObj.endDate.year;
 						mostRecentMon = tempObj.endDate.month;
 						companyName = tempObj.company.name;
@@ -1018,6 +1114,7 @@ function onLinkedInAuth() {
 
 			console.log(result);
 
+
 			smartfill('date-of-birth', result.dateOfBirth);
 
 			smartfill('fullname', result.fullname);
@@ -1026,24 +1123,25 @@ function onLinkedInAuth() {
 			smartfill('work-phone', result.work);
 			smartfill('mobile-phone', result.mobile);
 			smartfill('company', companyName);
-			smartfill('fullname', result.fullname);
-			smartfill('occupation', recentPosition);
+			//smartfill('occupation', recentPosition);
 
 			scope.$apply();
 
 			function smartfill(type, data) {
-				var smartField = $("input[smartfill=" + type + "]").first();
-				var model = scope.form[smartField.attr('field_id')];
 
-				//Don't auto fill if it is already filled
-				// if (model === undefined || model === '') 
-				model = data;
+				if (data !== undefined) {
+					console.log(data);
+					var smartField = $("input[smartfill=" + type + "]").first();
 
-				smartField.addClass('green');
+					var id = smartField.attr('field_id')
+					scope.form[id] = data;
 
-				if (type === 'company') {
-					smartField.change();
-					// smartField.trigger('input');
+					smartField.addClass('green');
+
+					if (type === 'company') {
+						smartField.trigger('change');
+						// smartField.trigger('input');
+					}
 				}
 			}
 		});

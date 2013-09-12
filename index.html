@@ -83,8 +83,8 @@
 			<div class="row-fluid text-center" style="margin:15px 0;">
 				<button class="btn btn-large span3 btn-success pull-right" ng-click="next()" ng-show="hasNext()">Next Section</button>
 				<button class="btn noMarginLeft btn-large span3 pull-left" ng-click="back()" ng-show="hasPrev()">Previous Section</button>
-				<button class="btn btn-large offset3 span6 btn-primary pull-right" ng-click="preview()" ng-hide="hasNext()">Preview Form</button>
-				<button class="btn btn-large offset3 span6 btn-primary pull-right" ng-click="submit()" ng-show="isComplete">Submit Form</button>
+				<button class="btn btn-large offset3 span6 btn-primary pull-right" ng-click="preview()" ng-show="isGoingPreview">Preview Form</button>
+				<button class="btn btn-large offset3 span6 btn-primary pull-right" ng-click="submit()" ng-show="isPreview">Submit Form</button>
 			</div>
 
 			<div class="vib">
@@ -115,6 +115,13 @@
 	<script src="plugins/underscore.string.js"></script>
 
 	<script src="plugins/jquery-ui-1.10.3.custom.js"></script>
+
+	<!-- The basic File Upload plugin -->
+	<script src="plugins/jquery.fileupload.js"></script>
+	<!-- // <script src="plugins/jquery.fileupload-image.js"></script> -->
+	<script src="plugins/jquery.iframe-transport.js"></script>
+
+
 	<!-- // <script src="plugins/jquery.sortable.js"></script> -->
 	<script src="plugins/mailcheck.js"></script>
 

@@ -75,7 +75,7 @@ field_type = {
 			title: 'Key in your official full name as in NRIC or Passport'
 		},
 		validate: {
-			pattern: '[\\w\\s]{5,19}',
+			pattern: '[\\w\\s\\,\\@]{5,19}',
 			message: 'Minimum of 5 to Maximum of 19 characters'
 		},
 		placeholder: 'e.g. Clinston Tan',
@@ -169,7 +169,7 @@ field_type = {
 		type: 'tel',
 		smartfill: 'work-phone',
 		validate: {
-			pattern: '([0-9\\(\\)\\/\\+ \\-][5..13])',
+			pattern: '[0-9\\(\\)\\/\\+ \\-]{5,13}',
 			message: 'Please enter a valid phone number'
 		},
 		placeholder: "eg. +65 64004537",
@@ -179,7 +179,7 @@ field_type = {
 		type: 'tel',
 		smartfill: 'home-phone',
 		validate: {
-			pattern: '([0-9\\(\\)\\/\\+ \\-][5..13])',
+			pattern: '[0-9\\(\\)\\/\\+ \\-]{5,13}',
 			message: 'Please enter a valid phone number'
 		},
 		placeholder: "eg. +65 64004537",
@@ -189,13 +189,13 @@ field_type = {
 		type: 'tel',
 		smartfill: 'mobile-phone',
 		validate: {
-			pattern: '([0-9\\(\\)\\/\\+ \\-][5..13])',
+			pattern: '[0-9\\(\\)\\/\\+ \\-]{5,13}',
 			message: 'Please enter a valid phone number'
 		},
 		placeholder: "eg. +65 82904537",
 		fieldID: 'dStxVQkt42c8Gu3jP1qtsd' // mobile telephone numbers
 	},
-	OVERSEAS_PHONE:{
+	OVERSEAS_PHONE: {
 		"type": "tel",
 		placeholder: "eg. +82 9064004537"
 	},
@@ -5268,5 +5268,25 @@ field_type = {
 	LABEL_TEXT_TITLE: {
 		type: 'label-header',
 		text: 'Sample Label Text'
+	},
+	PASSPORT_UPLOAD: {
+		text: "Passport",
+		type: "file"
+	},
+	NRIC_FRONT_UPLOAD: {
+		text: "NRIC Front",
+		type: "file"
+	},
+	NRIC_BACK_UPLOAD: {
+		text: "NRIC Back",
+		type: "file"
+	},
+	INCOME_PROOF: {
+		text: "Income Proof",
+		type: "file"
+	},
+	ADDRESS_PROOF: {
+		text: "Address Proof",
+		type: "file"
 	}
 }

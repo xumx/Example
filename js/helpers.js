@@ -186,3 +186,5 @@ function donowhat() {
 		})
 	});
 }
+
+window.log = console.log

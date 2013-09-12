@@ -21,13 +21,29 @@ function controller($scope) {
 
 	scope.deleteformsave = function(reference) {
 		console.log('delete', reference);
-		// $.post(DELETE_FORMSAVE + reference, function (response) {
-		// 	console.log(response);
-		// });
+		$.post(DELETE_FORMSAVE + reference, function (response) {
+			// $('.datatable').empty();
+			$.get(GET_FORMSAVE, function(data) {
+
+				scope.formsavelist = data;
+				scope.$apply();
+				var oTable = $('.datatable').dataTable();
+				oTable.fnDraw();
+				// $('.datatable').dataTable({
+				// 	"sDom": "<'row-fluid'<'span6'l><'span6'f>r>t<'row-fluid'<'span12'i><'span12 center'p>>",
+				// 	"sPaginationType": "bootstrap",
+				// 	"oLanguage": {
+				// 		"sLengthMenu": "_MENU_ records per page"
+				// 	}
+				// });
+			})
+
+			console.log(response);
+		});
 	}
 
-	switch (location.pathname) {
-		case "/resources/Client/admin/rocket-formsave.html":
+	switch (location.pathname.match('.+/(.+html)')[1]) {
+		case "rocket-formsave.html":
 			$.get(GET_FORMSAVE, function(data) {
 
 				scope.formsavelist = data;
@@ -44,7 +60,7 @@ function controller($scope) {
 			break;
 
 
-		case "/resources/Client/admin/rocket-feedback.html":
+		case "rocket-feedback.html":
 			$.get(GET_FEEDBACK, function(data) {
 				scope.feedbacklist = data;
 				scope.$apply();
@@ -52,10 +68,11 @@ function controller($scope) {
 			break;
 
 
-		case "/resources/Client/admin/rocket-document.html":
+		case "rocket-document.html":
 			$('.file-manager').elfinder({
-				url: '../../..//api/connector',
-				sync: 5000,
+				url: '../../../api/connector',
+				loadTmbs: 0,
+				//sync: 5000,
 				commands: ['open', 'reload', 'home', 'up',
 					'back', 'forward', 'getfile', 'quicklook',
 					'download', 'rm', 'duplicate', 'rename',
@@ -63,27 +80,21 @@ function controller($scope) {
 					'edit', 'extract', 'archive', 'search',
 					'info', 'view', 'help', 'resize', 'sort'
 				],
-				handlers: {
-					preview: function(event, elfinderInstance) {
-						console.log(event.data);
-						console.log(event.data.selected);
-					}
-				},
+				// handlers: {
+				// 	preview: function(event, elfinderInstance) {
+				// 		console.log(event.data);
+				// 		console.log(event.data.selected);
+				// 	}
+				// },
 				dragUploadAllow: false
 			});
 
 			break;
 
-		case "/resources/Client/admin/rocket-form-builder.html":
+		case "rocket-form-builder.html":
 			break;
 
-		case "/resources/Client/admin/rocket-custom-document.html":
+		case "rocket-custom-document.html":
 			break;
 	}
-
 }
-
-$('iframe').load(function() {
-	this.style.height = this.contentWindow.document.body.scrollHeight + 'px';
-	this.contentWindow.onbeforeunload = undefined;
-});
